@@ -28,7 +28,8 @@ defmodule BitMsg.Mixfile do
     [
       {:cowboy, "~> 1.1.2"},
       {:plug, "~> 1.3.4"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:distillery, "~> 1.4.0"}
     ]
   end
 end

@@ -7,10 +7,19 @@ defmodule BitMsgHttp.Server do
   end
 
   def init(:ok) do
-    children = [
-      Cowboy.child_spec(:http, BitMsgHttp.Router, [], port: 8000),
-      worker(BitMsgHttp.UIBuilder, [])
-    ]
+    cowboy = Cowboy.child_spec(:http, BitMsgHttp.Router, [], port: 8000)
+    children = case System.get_env("MIX_ENV") do
+      "prod" -> [ cowboy ]
+      # if we are not in production environment make worker to
+      # build ui and watch for changes
+      _ -> [
+        cowboy,
+        worker(BitMsgHttp.UIBuilder, [])
+      ]
+    end
+
+    # IO.inspect(System.get_env("MIX_ENV"))
+    # children = [cowboy]
 
     Supervisor.init(children, strategy: :one_for_one)
   end
